@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam OTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"], input[type="submit"] {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Nhập số điện thoại để gửi OTP</h2>
+    <form id="otpForm">
+        <input type="text" id="phone" placeholder="Nhập số điện thoại" required>
+        <input type="submit" value="Gửi">
+    </form>
+    <p id="status"></p>
+</div>
+
+<script>
+    document.getElementById('otpForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        
+        var phoneNumber = document.getElementById('phone').value;
+        document.getElementById('status').innerText = 'Đang gửi...';
+        
+        fetch('/send-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ phone: phoneNumber })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('status').innerText = data.message;
+        })
+        .catch(error => {
+            document.getElementById('status').innerText = 'Đã có lỗi xảy ra.';
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+</body>
+</html>
